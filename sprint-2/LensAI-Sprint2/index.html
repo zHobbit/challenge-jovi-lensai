@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#08060F" />
+  <title>LensAI · JOVI V70 — Assistente de Câmera Inteligente</title>
+  <meta name="description" content="LensAI: assistente de câmera com IA para o JOVI V70. Protótipo web (FIAP Challenge JOVI · Sprint 2)." />
+
+  <!-- Tailwind CSS (embutido localmente para funcionar offline) -->
+  <script src="vendor/tailwind.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg: '#08060F', surface: '#12101E', surface2: '#1B1830',
+            purple: '#8B5CF6', purple2: '#A78BFA',
+            amber: '#FFB020', amber2: '#F59E0B',
+            green: '#34D399', muted: '#9A94B4',
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='%238B5CF6'/><circle cx='16' cy='16' r='5' fill='%23FFB020'/></svg>" />
+</head>
+<body>
+
+  <!-- Barra de progresso de scroll -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Navbar -->
+  <header class="site-nav" id="siteNav">
+    <div class="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
+      <a href="#top" class="flex items-center gap-2">
+        <svg width="26" height="26" viewBox="0 0 100 100"><circle cx="50" cy="50" r="32" fill="none" stroke="#FFB020" stroke-width="8"/><circle cx="50" cy="50" r="13" fill="#FFB020"/><circle cx="74" cy="28" r="6" fill="#8B5CF6"/></svg>
+        <span class="text-lg wordmark font-extrabold">LensAI</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-7 text-sm text-muted">
+        <a href="#problema" class="nav-link hover:text-white transition">Problema</a>
+        <a href="#solucao" class="nav-link hover:text-white transition">Solução</a>
+        <a href="#como" class="nav-link hover:text-white transition">Como funciona</a>
+        <a href="#impacto" class="nav-link hover:text-white transition">Impacto</a>
+        <a href="#dados" class="nav-link hover:text-white transition">Dados</a>
+      </nav>
+      <a href="#prototipo" class="btn-amber text-xs md:text-sm font-semibold px-4 py-2 rounded-full">Ver protótipo</a>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ============================ HERO ============================ -->
+    <section class="hero-wrap">
+      <div class="hero-bg"></div>
+      <div class="hero-bg-2"></div>
+      <div class="hero-ghost" id="heroGhost" aria-hidden="true">JOVI</div>
+      <div class="max-w-6xl mx-auto px-5 text-center relative z-10">
+        <span class="reveal inline-flex items-center gap-2 glass px-3 py-1.5 rounded-full text-xs text-muted mb-7">
+          <span class="w-1.5 h-1.5 rounded-full pulse" style="background:var(--green)"></span>
+          FIAP · Challenge JOVI · 2026 · Sprint 2
+        </span>
+        <h1 class="reveal text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05] mb-6" data-delay="80">
+          A câmera que<br /><span class="wordmark">entende você</span>
+        </h1>
+        <p class="reveal text-base md:text-xl text-muted max-w-2xl mx-auto mb-9" data-delay="160">
+          <b class="text-white">LensAI</b> analisa iluminação, composição e profundidade em tempo real
+          e aplica os melhores ajustes do <b class="text-white">JOVI V70 · 200 MP</b> com 1 toque.
+          Resultado profissional, sem curva de aprendizado.
+        </p>
+        <div class="reveal flex flex-col sm:flex-row items-center justify-center gap-3 mb-4" data-delay="240">
+          <a href="#prototipo" class="btn-amber w-full sm:w-auto px-7 py-3.5 rounded-2xl font-semibold text-center">Experimentar agora</a>
+          <a href="#problema" class="btn-ghost glass w-full sm:w-auto px-7 py-3.5 rounded-2xl font-semibold text-center">Ver a proposta</a>
+        </div>
+        <div class="reveal text-[11px] text-muted/70 flex items-center justify-center gap-2 mt-10 scroll-hint" data-delay="320">
+          <span>Role para explorar</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ SHOWCASE (sticky phone + story) ============================ -->
+    <div class="max-w-6xl mx-auto px-5 lg:grid lg:grid-cols-2 lg:gap-12" id="prototipo">
+
+      <!-- Coluna do protótipo (sticky no desktop) -->
+      <div class="phone-col">
+        <div class="phone-inner">
+          <p class="text-center text-xs text-muted mb-3 hidden lg:block">↓ Protótipo funcional · interaja enquanto rola →</p>
+          <div class="device" id="device">
+
+            <!-- Flash / Toast -->
+            <div class="flash" id="flash"></div>
+            <div class="toast" id="toast"><div class="glass px-4 py-2.5 rounded-full text-sm font-medium shadow-lg"></div></div>
+
+            <!-- SPLASH -->
+            <section class="screen active items-center justify-center text-center px-8" data-screen="splash">
+              <div class="scene scene--night" style="filter:brightness(.5) saturate(.8)"></div>
+              <div class="relative z-10 flex flex-col items-center">
+                <div class="relative mb-8">
+                  <div class="w-28 h-28 rounded-full grid place-items-center" style="background:radial-gradient(circle at 50% 40%, rgba(139,92,246,.35), transparent 70%)">
+                    <svg width="86" height="86" viewBox="0 0 100 100" class="pulse"><circle cx="50" cy="50" r="34" fill="none" stroke="#FFB020" stroke-width="4"/><circle cx="50" cy="50" r="12" fill="#FFB020"/><circle cx="72" cy="30" r="4" fill="#8B5CF6"/></svg>
+                  </div>
+                </div>
+                <h1 class="text-5xl wordmark mb-3">LensAI</h1>
+                <p class="text-muted mb-1">A câmera que entende você</p>
+                <p class="text-xs text-muted/70 tracking-widest uppercase">JOVI V70 · 200 MP</p>
+                <div class="w-44 mt-10">
+                  <div class="meter"><span id="bootBar"></span></div>
+                  <p class="text-[11px] text-muted mt-2" id="bootStatus">Inicializando IA de câmera…</p>
+                </div>
+              </div>
+              <button class="absolute bottom-10 text-xs text-muted underline underline-offset-4" data-go="permission">Toque para começar</button>
+            </section>
+
+            <!-- PERMISSÃO -->
+            <section class="screen items-center justify-center text-center px-8" data-screen="permission">
+              <div class="scene scene--sunset" style="filter:brightness(.55) saturate(.9)"></div>
+              <div class="absolute inset-0" style="background:linear-gradient(180deg, rgba(8,6,15,.4), rgba(8,6,15,.85))"></div>
+              <div class="relative z-10 flex flex-col items-center max-w-xs">
+                <div class="w-20 h-20 rounded-3xl glass grid place-items-center mb-6 relative">
+                  <span class="absolute -top-2 -right-2 text-[10px] font-bold px-2 py-0.5 rounded-full text-black" style="background:var(--amber)">AI+</span>
+                  <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M8 7l1.5-2.5h5L16 7"/><circle cx="12" cy="13.5" r="3.2"/></svg>
+                </div>
+                <h2 class="text-2xl font-bold mb-3 leading-tight">LensAI precisa acessar<br/>sua câmera</h2>
+                <p class="text-sm text-muted mb-8">Para analisar o ambiente em tempo real e sugerir os melhores ajustes para o seu JOVI V70.</p>
+                <button class="w-full py-3.5 rounded-2xl font-semibold text-black mb-3" style="background:linear-gradient(100deg,var(--amber),var(--amber2))" data-go="camera">Permitir acesso à câmera</button>
+                <button class="text-sm text-muted py-2" data-go="camera">Agora não</button>
+                <p class="text-[11px] text-muted/70 mt-6 flex items-center gap-1.5">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                  Simulação — nenhuma imagem é enviada
+                </p>
+              </div>
+            </section>
+
+            <!-- CÂMERA -->
+            <section class="screen" data-screen="camera">
+              <div class="scene scene--sunset" id="cameraScene"></div>
+              <div class="viewfinder-grid" id="vfGrid"></div>
+              <div class="scanline" id="scanline"></div>
+              <div class="focus-ring" id="focusRing"></div>
+
+              <div class="relative z-20 flex items-center justify-between px-5 pt-9">
+                <button class="w-10 h-10 rounded-full glass grid place-items-center" id="btnGrid" title="Grade">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+                </button>
+                <div class="glass px-3 py-1.5 rounded-full flex items-center gap-2 text-xs font-medium">
+                  <span class="w-2 h-2 rounded-full pulse" style="background:var(--green)"></span> LensAI ativo
+                </div>
+                <button class="w-10 h-10 rounded-full glass grid place-items-center" data-go="settings" title="Configurações">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.3.9a7 7 0 0 0-1.7-1l-.4-2.5h-4l-.4 2.5a7 7 0 0 0-1.7 1l-2.3-.9-2 3.4L4.1 11a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.3-.9a7 7 0 0 0 1.7 1l.4 2.5h4l.4-2.5a7 7 0 0 0 1.7-1l2.3.9 2-3.4-2-1.5a7 7 0 0 0 .1-1Z"/></svg>
+                </button>
+              </div>
+
+              <div class="relative z-20 mx-5 mt-4 glass rounded-2xl p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="flex items-center gap-2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--purple2)" stroke-width="1.8"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"/><circle cx="12" cy="12" r="3.5"/></svg>
+                    <div class="leading-tight">
+                      <span class="text-sm font-semibold block">Análise de cena</span>
+                      <span class="text-[10px] text-muted">200 MP · OIS ativo</span>
+                    </div>
+                  </div>
+                  <div class="text-right leading-none">
+                    <div class="text-2xl font-extrabold count-up text-gradient" id="sceneScore">0</div>
+                    <div class="text-[10px] text-muted -mt-0.5">score /100</div>
+                  </div>
+                </div>
+                <div class="space-y-2.5">
+                  <div><div class="flex justify-between text-[11px] text-muted mb-1"><span>Iluminação</span><span id="mLightVal">—</span></div><div class="meter"><span id="mLight"></span></div></div>
+                  <div><div class="flex justify-between text-[11px] text-muted mb-1"><span>Composição</span><span id="mCompVal">—</span></div><div class="meter"><span id="mComp"></span></div></div>
+                  <div><div class="flex justify-between text-[11px] text-muted mb-1"><span>Profundidade</span><span id="mDepthVal">—</span></div><div class="meter"><span id="mDepth"></span></div></div>
+                </div>
+              </div>
+
+              <div class="flex-1"></div>
+
+              <div class="relative z-20 px-5">
+                <button id="suggestPill" class="w-full glass rounded-2xl px-4 py-3 flex items-center justify-between rise" style="border-color:rgba(255,176,32,.4)">
+                  <div class="flex items-center gap-3">
+                    <span class="w-9 h-9 rounded-full grid place-items-center" style="background:linear-gradient(135deg,var(--purple),var(--amber))">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15l-1.9-4.1L5.5 9l4.6-1.4L12 3Z"/></svg>
+                    </span>
+                    <div class="text-left">
+                      <div class="text-sm font-semibold">LensAI tem <span id="suggestCount">3</span> sugestões</div>
+                      <div class="text-[11px] text-muted">Toque para melhorar esta foto</div>
+                    </div>
+                  </div>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+                </button>
+              </div>
+
+              <div class="relative z-20 px-5 mt-2 hidden" id="focalRow">
+                <div class="flex justify-center gap-1.5" id="focalChips"></div>
+              </div>
+
+              <div class="relative z-20 px-5 mt-3">
+                <div class="flex justify-center gap-2 text-xs" id="modeChips">
+                  <button class="chip glass px-3.5 py-1.5 rounded-full" data-mode="noite">Noite</button>
+                  <button class="chip glass px-3.5 py-1.5 rounded-full" data-mode="retrato">Retrato</button>
+                  <button class="chip glass px-3.5 py-1.5 rounded-full active" data-mode="foto">Foto</button>
+                  <button class="chip glass px-3.5 py-1.5 rounded-full" data-mode="video">Vídeo</button>
+                </div>
+              </div>
+
+              <div class="relative z-20 px-8 py-6 flex items-center justify-between">
+                <button id="galleryThumb" class="w-12 h-12 rounded-xl overflow-hidden border-2 border-white/30 relative" title="Galeria">
+                  <div class="scene scene--palm" style="position:absolute"></div>
+                </button>
+                <button class="shutter" id="shutter" title="Capturar"></button>
+                <button id="swapScene" class="w-12 h-12 rounded-full glass grid place-items-center" title="Trocar cena">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><path d="M4 9a8 8 0 0 1 13-3l3 3M20 15a8 8 0 0 1-13 3l-3-3"/><path d="M20 5v4h-4M4 19v-4h4"/></svg>
+                </button>
+              </div>
+            </section>
+
+            <!-- GALERIA -->
+            <section class="screen" data-screen="gallery">
+              <div class="relative z-10 flex items-center justify-between px-5 pt-9 pb-3">
+                <div><h2 class="text-xl font-bold">Galeria</h2><p class="text-[11px] text-muted" id="galleryCount">— fotos</p></div>
+                <span class="glass text-[11px] px-2.5 py-1 rounded-full flex items-center gap-1.5" style="border-color:rgba(139,92,246,.4)"><span class="w-1.5 h-1.5 rounded-full" style="background:var(--purple2)"></span> LensAI Smart</span>
+              </div>
+              <div class="px-5 pb-3 flex gap-2 text-xs overflow-x-auto scroll" id="galleryTabs">
+                <button class="chip glass px-3.5 py-1.5 rounded-full active whitespace-nowrap" data-filter="todas">Todas</button>
+                <button class="chip glass px-3.5 py-1.5 rounded-full whitespace-nowrap inline-flex items-center gap-1.5" data-filter="lensai"><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--amber)" aria-hidden="true"><path d="M12 2l1.7 5.1L19 8.8l-5.3 1.7L12 16l-1.7-5.5L5 8.8l5.3-1.7L12 2Z"/></svg>LensAI</button>
+                <button class="chip glass px-3.5 py-1.5 rounded-full whitespace-nowrap" data-filter="por-do-sol">Pôr do sol</button>
+                <button class="chip glass px-3.5 py-1.5 rounded-full whitespace-nowrap" data-filter="praia">Praia</button>
+                <button class="chip glass px-3.5 py-1.5 rounded-full whitespace-nowrap" data-filter="noite">Noite</button>
+              </div>
+              <div class="scroll flex-1 px-5 pb-28" id="galleryBody"></div>
+            </section>
+
+            <!-- DETALHE DA FOTO -->
+            <section class="screen" data-screen="photo">
+              <div class="relative z-20 flex items-center justify-between px-5 pt-9 pb-3">
+                <button class="w-10 h-10 rounded-full glass grid place-items-center" data-go="gallery"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M15 6l-6 6 6 6"/></svg></button>
+                <span class="text-sm font-medium">Detalhe da foto</span>
+                <span class="glass text-[11px] px-2.5 py-1 rounded-full" id="photoTagBadge">LensAI</span>
+              </div>
+              <div class="scroll flex-1 px-5 pb-28">
+                <div class="rounded-2xl overflow-hidden relative aspect-[3/4] mb-4">
+                  <div class="scene" id="photoScene"></div>
+                  <div class="absolute bottom-3 left-3 glass px-2.5 py-1 rounded-full text-[11px]" id="photoDate">—</div>
+                </div>
+                <div class="glass rounded-2xl p-4 mb-4 hidden" id="editorPanel">
+                  <div class="flex items-center justify-between mb-3"><span class="text-sm font-semibold">Editor rápido</span><button class="text-xs text-amber font-semibold" id="editorSave">Salvar</button></div>
+                  <div class="space-y-3">
+                    <label class="block"><span class="text-[11px] text-muted flex justify-between mb-1"><span>Brilho</span><span id="valBright">100%</span></span><input type="range" id="ctlBright" min="50" max="180" value="100"></label>
+                    <label class="block"><span class="text-[11px] text-muted flex justify-between mb-1"><span>Contraste</span><span id="valContrast">100%</span></span><input type="range" id="ctlContrast" min="60" max="170" value="100"></label>
+                    <label class="block"><span class="text-[11px] text-muted flex justify-between mb-1"><span>Saturação</span><span id="valSat">100%</span></span><input type="range" id="ctlSat" min="0" max="220" value="100"></label>
+                  </div>
+                </div>
+                <div class="glass rounded-2xl p-4 mb-4">
+                  <div class="flex items-center justify-between mb-3"><span class="text-sm font-semibold">Captura com LensAI</span><div class="text-right leading-none"><span class="text-xl font-extrabold text-gradient" id="photoScore">—</span><span class="text-[10px] text-muted">/100</span></div></div>
+                  <div class="grid grid-cols-3 gap-2" id="photoAdjustments"></div>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                  <button class="glass rounded-2xl py-3 flex flex-col items-center gap-1.5 text-xs" id="btnShare"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.7"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.5 13.5l7 4M15.5 6.5l-7 4"/></svg>Compartilhar</button>
+                  <button class="glass rounded-2xl py-3 flex flex-col items-center gap-1.5 text-xs" id="btnEdit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--purple2)" stroke-width="1.7"><path d="M4 20h4l10-10-4-4L4 16v4Z"/><path d="M13.5 6.5l4 4"/></svg>Editar</button>
+                  <button class="glass rounded-2xl py-3 flex flex-col items-center gap-1.5 text-xs" id="btnDelete"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="1.7"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>Excluir</button>
+                </div>
+              </div>
+            </section>
+
+            <!-- CONFIGURAÇÕES -->
+            <section class="screen" data-screen="settings">
+              <div class="relative z-10 flex items-center gap-3 px-5 pt-9 pb-4">
+                <button class="w-10 h-10 rounded-full glass grid place-items-center" data-go="camera"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M15 6l-6 6 6 6"/></svg></button>
+                <h2 class="text-xl font-bold">Configurações</h2>
+              </div>
+              <div class="scroll flex-1 px-5 pb-28">
+                <p class="text-[11px] uppercase tracking-wider text-muted mb-2 mt-2">Assistente LensAI</p>
+                <div class="glass rounded-2xl divide-y divide-white/5 mb-6" id="settingsList"></div>
+                <p class="text-[11px] uppercase tracking-wider text-muted mb-2">Desempenho</p>
+                <div class="glass rounded-2xl p-4 mb-6">
+                  <div class="flex items-center justify-between text-sm mb-1"><span class="text-muted">Tempo de carregamento</span><span class="font-semibold text-green" id="perfLoad">—</span></div>
+                  <div class="flex items-center justify-between text-sm mb-1"><span class="text-muted">Análise de cena</span><span class="font-semibold">tempo real</span></div>
+                  <div class="flex items-center justify-between text-sm"><span class="text-muted">Fotos otimizadas</span><span class="font-semibold" id="perfOptimized">0</span></div>
+                </div>
+                <p class="text-[11px] uppercase tracking-wider text-muted mb-2">Sobre</p>
+                <div class="glass rounded-2xl p-4 text-sm">
+                  <p class="font-semibold mb-1">LensAI × JOVI V70</p>
+                  <p class="text-muted text-[13px] mb-3">Assistente de câmera inteligente. Tecnologia que desaparece, experiência que fica.</p>
+                  <div class="text-[12px] text-muted space-y-0.5"><p>FIAP · Challenge JOVI · 2026</p><p>Victor Holanda — <span class="text-purple2 font-semibold">RM571263</span></p></div>
+                </div>
+              </div>
+            </section>
+
+            <!-- BOTTOM NAV -->
+            <nav class="absolute bottom-0 left-0 right-0 z-40 glass border-t border-white/5 hidden" id="bottomNav" style="border-radius:22px 22px 0 0">
+              <div class="grid grid-cols-4 py-2.5 px-2">
+                <button class="nav-item flex flex-col items-center gap-1 text-[10px] py-1" data-nav="camera"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M8 7l1.5-2.5h5L16 7"/><circle cx="12" cy="13.5" r="3.2"/></svg>Câmera</button>
+                <button class="nav-item flex flex-col items-center gap-1 text-[10px] py-1" data-nav="gallery"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M4 18l5-5 4 4 3-3 4 4"/></svg>Galeria</button>
+                <button class="nav-item flex flex-col items-center gap-1 text-[10px] py-1" data-nav="lensai"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15l-1.9-4.1L5.5 9l4.6-1.4L12 3Z"/></svg>LensAI</button>
+                <button class="nav-item flex flex-col items-center gap-1 text-[10px] py-1" data-nav="settings"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>Config</button>
+              </div>
+            </nav>
+
+            <!-- SHEET: SUGESTÕES -->
+            <div class="sheet-backdrop" id="sheetBackdrop"></div>
+            <div class="sheet glass" id="suggestSheet">
+              <div class="p-5 pb-8">
+                <div class="w-10 h-1 rounded-full bg-white/20 mx-auto mb-4"></div>
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="w-7 h-7 rounded-full grid place-items-center" style="background:linear-gradient(135deg,var(--purple),var(--amber))"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15l-1.9-4.1L5.5 9l4.6-1.4L12 3Z"/></svg></span>
+                  <h3 class="text-lg font-bold">Sugestões da IA</h3>
+                </div>
+                <p class="text-xs text-muted mb-4">Toque para aplicar individualmente ou tudo de uma vez.</p>
+                <div class="space-y-2.5" id="suggestList"></div>
+                <div class="mt-5 flex items-center justify-between glass rounded-xl px-4 py-3" style="border-color:rgba(52,211,153,.3)"><span class="text-sm text-muted">Score projetado</span><span class="text-2xl font-extrabold text-green count-up" id="projScore">72</span></div>
+                <button class="w-full mt-4 py-3.5 rounded-2xl font-semibold text-black flex items-center justify-center gap-2" style="background:linear-gradient(100deg,var(--amber),var(--amber2))" id="applyAll"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.2"><path d="M5 12l5 5L20 6"/></svg>Aplicar tudo com 1 toque</button>
+                <button class="w-full mt-2 py-2.5 text-sm text-muted" id="sheetCancel">Cancelar</button>
+              </div>
+            </div>
+
+            <!-- SHEET: COMPARTILHAR -->
+            <div class="sheet-backdrop" id="shareBackdrop"></div>
+            <div class="sheet glass" id="shareSheet">
+              <div class="p-5 pb-8">
+                <div class="w-10 h-1 rounded-full bg-white/20 mx-auto mb-4"></div>
+                <h3 class="text-lg font-bold mb-1">Compartilhar</h3>
+                <p class="text-xs text-muted mb-5">Sua foto LensAI está pronta para as redes.</p>
+                <div class="grid grid-cols-4 gap-3 mb-5 text-center text-[11px]">
+                  <button class="share-target flex flex-col items-center gap-1.5" data-share="WhatsApp"><span class="w-14 h-14 rounded-2xl grid place-items-center" style="background:#25D366"><svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15l-1 3.7 3.8-1A10 10 0 1 0 12 2Zm5.3 14c-.2.6-1.3 1.2-1.8 1.2s-1.2.2-3.7-1.1a9 9 0 0 1-3.6-3.7c-.3-.5-1-1.6-1-2.6s.5-1.5.8-1.7a.8.8 0 0 1 .6-.2h.4c.2 0 .4 0 .6.5l.7 1.8c0 .2.1.4 0 .5l-.4.6c-.2.2-.3.4-.1.6l.9 1.4c.6.7 1.1 1 1.5 1.2.2.1.4.1.5-.1l.6-.8c.2-.2.3-.2.5-.1l1.7.8c.2.1.4.2.4.3.1.2.1.7-.1 1.2Z"/></svg></span>WhatsApp</button>
+                  <button class="share-target flex flex-col items-center gap-1.5" data-share="Instagram"><span class="w-14 h-14 rounded-2xl grid place-items-center" style="background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="#fff"/></svg></span>Instagram</button>
+                  <button class="share-target flex flex-col items-center gap-1.5" data-share="Enviar"><span class="w-14 h-14 rounded-2xl glass grid place-items-center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7Z"/></svg></span>Enviar</button>
+                  <button class="share-target flex flex-col items-center gap-1.5" data-share="link"><span class="w-14 h-14 rounded-2xl glass grid place-items-center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></span>Copiar link</button>
+                </div>
+                <button class="w-full py-2.5 text-sm text-muted" id="shareCancel">Fechar</button>
+              </div>
+            </div>
+
+          </div><!-- /device -->
+        </div><!-- /phone-inner -->
+      </div><!-- /phone-col -->
+
+      <!-- Coluna da narrativa -->
+      <div class="story-col py-16 lg:py-24">
+
+        <!-- PROBLEMA -->
+        <section id="problema" class="anchor mb-28">
+          <span class="reveal tag-etapa">Etapa 1 · Negócio</span>
+          <h2 class="reveal text-3xl md:text-4xl font-extrabold mt-3 mb-2" data-delay="60">O Problema</h2>
+          <p class="reveal text-muted mb-8" data-delay="120">A curva de aprendizado da câmera. O JOVI V70 tem câmera avançada — mas a maioria dos usuários nunca explora além do botão de captura.</p>
+          <div class="grid sm:grid-cols-2 gap-4 mb-8">
+            <div class="reveal glass rounded-2xl p-5" data-delay="120">
+              <div class="w-10 h-10 rounded-full grid place-items-center mb-3" style="background:rgba(255,107,107,.15)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg></div>
+              <h3 class="font-semibold mb-1">Configurações complexas</h3>
+              <p class="text-sm text-muted">ISO, EV, temperatura de cor — especificações que a maioria não sabe utilizar.</p>
+            </div>
+            <div class="reveal glass rounded-2xl p-5" data-delay="200">
+              <div class="w-10 h-10 rounded-full grid place-items-center mb-3" style="background:rgba(255,176,32,.15)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.8"><path d="M12 3l9 16H3L12 3Z"/><path d="M12 9v4M12 16h.01"/></svg></div>
+              <h3 class="font-semibold mb-1">Frustração com o resultado</h3>
+              <p class="text-sm text-muted">Fotos ruins atribuídas ao hardware, não ao uso da câmera.</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="reveal glass rounded-2xl p-5 text-center" data-delay="120"><div class="text-4xl font-extrabold text-gradient" data-count="68" data-suffix="%">0</div><p class="text-xs text-muted mt-1">nunca usam configuração manual</p></div>
+            <div class="reveal glass rounded-2xl p-5 text-center" data-delay="200"><div class="text-4xl font-extrabold text-gradient" data-count="3" data-suffix="x">0</div><p class="text-xs text-muted mt-1">mais reclamações de "câmera fraca"</p></div>
+          </div>
+        </section>
+
+        <!-- SOLUÇÃO -->
+        <section id="solucao" class="anchor mb-28">
+          <span class="reveal tag-etapa">Etapa 1 · Negócio</span>
+          <h2 class="reveal text-3xl md:text-4xl font-extrabold mt-3 mb-2" data-delay="60">A Solução</h2>
+          <p class="reveal text-muted mb-8" data-delay="120">Uma IA que lê o ambiente em tempo real e aplica os melhores ajustes com 1 toque — e ainda <b class="text-white">ensina</b> o usuário através de um score de foto.</p>
+          <div class="space-y-4">
+            <div class="reveal glass rounded-2xl p-5 flex gap-4" data-delay="120"><span class="w-11 h-11 flex-none rounded-full grid place-items-center" style="background:rgba(255,176,32,.15)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg></span><div><h3 class="font-semibold mb-1">Iluminação</h3><p class="text-sm text-muted">Detecta nível de luz, temperatura de cor e contraluz em tempo real.</p></div></div>
+            <div class="reveal glass rounded-2xl p-5 flex gap-4" data-delay="180"><span class="w-11 h-11 flex-none rounded-full grid place-items-center" style="background:rgba(139,92,246,.18)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--purple2)" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg></span><div><h3 class="font-semibold mb-1">Composição</h3><p class="text-sm text-muted">Analisa enquadramento, regra dos terços e linha do horizonte.</p></div></div>
+            <div class="reveal glass rounded-2xl p-5 flex gap-4" data-delay="240"><span class="w-11 h-11 flex-none rounded-full grid place-items-center" style="background:rgba(52,211,153,.15)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span><div><h3 class="font-semibold mb-1">Profundidade & Score</h3><p class="text-sm text-muted">Gera um score da cena e ensina o usuário a extrair o melhor do hardware.</p></div></div>
+          </div>
+        </section>
+
+        <!-- COMO FUNCIONA -->
+        <section id="como" class="anchor mb-28">
+          <span class="reveal tag-etapa">Etapa 1 · Negócio</span>
+          <h2 class="reveal text-3xl md:text-4xl font-extrabold mt-3 mb-2" data-delay="60">Como Funciona</h2>
+          <p class="reveal text-muted mb-8" data-delay="120">3 passos. Nenhum manual necessário.</p>
+          <div class="space-y-4">
+            <div class="reveal glass rounded-2xl p-5 flex items-center gap-5" data-delay="120"><span class="text-3xl font-extrabold text-purple2 w-8">01</span><div><h3 class="font-semibold">Abrir a câmera</h3><p class="text-sm text-muted">LensAI ativa automaticamente e inicia a análise contextual.</p></div></div>
+            <div class="reveal glass rounded-2xl p-5 flex items-center gap-5" data-delay="180"><span class="text-3xl font-extrabold text-amber w-8">02</span><div><h3 class="font-semibold">Ver a sugestão</h3><p class="text-sm text-muted">Um card flutuante mostra iluminação, composição e profundidade.</p></div></div>
+            <div class="reveal glass rounded-2xl p-5 flex items-center gap-5" data-delay="240"><span class="text-3xl font-extrabold text-green w-8">03</span><div><h3 class="font-semibold">Aplicar em 1 toque</h3><p class="text-sm text-muted">Ajustes aplicados — ou aprenda vendo o que foi modificado.</p></div></div>
+          </div>
+        </section>
+
+        <!-- IMPACTO -->
+        <section id="impacto" class="anchor mb-28">
+          <span class="reveal tag-etapa">Etapa 1 · Negócio</span>
+          <h2 class="reveal text-3xl md:text-4xl font-extrabold mt-3 mb-2" data-delay="60">Impacto Esperado</h2>
+          <p class="reveal text-muted mb-8" data-delay="120">Quatro transformações que a LensAI entrega para o ecossistema JOVI.</p>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div class="reveal glass rounded-2xl p-5" data-delay="120"><h3 class="font-semibold mb-1 text-purple2">Curva de aprendizado otimizada</h3><p class="text-sm text-muted">A IA não aplica às cegas: mostra o que muda e ensina o usuário.</p></div>
+            <div class="reveal glass rounded-2xl p-5" data-delay="180"><h3 class="font-semibold mb-1 text-amber">Percepção de qualidade</h3><p class="text-sm text-muted">De "câmera confusa" para "câmera que entende você".</p></div>
+            <div class="reveal glass rounded-2xl p-5" data-delay="240"><h3 class="font-semibold mb-1 text-green">Engajamento orgânico</h3><p class="text-sm text-muted">Fotos melhores geram mais compartilhamento e visibilidade da JOVI.</p></div>
+            <div class="reveal glass rounded-2xl p-5" data-delay="300"><h3 class="font-semibold mb-1" style="color:#7fd1ff">Diferencial competitivo</h3><p class="text-sm text-muted">Uma experiência de câmera que a concorrência não copia facilmente.</p></div>
+          </div>
+        </section>
+
+        <!-- MODELO DE DADOS -->
+        <section id="dados" class="anchor mb-10">
+          <span class="reveal tag-etapa">Etapa 2 · Modelo de Dados</span>
+          <h2 class="reveal text-3xl md:text-4xl font-extrabold mt-3 mb-2" data-delay="60">Modelo Lógico</h2>
+          <p class="reveal text-muted mb-8" data-delay="120">A estrutura que sustenta a inteligência do LensAI (entregue no Sprint 1).</p>
+          <div class="space-y-3">
+            <div class="reveal er-node" data-delay="120"><div class="er-head">USUARIO</div><p class="er-cols">ID_USUARIO <b>PK</b> · DISPOSITIVO · DATA_CADASTRO</p></div>
+            <div class="er-rel reveal" data-delay="140">1 : N</div>
+            <div class="reveal er-node" data-delay="160"><div class="er-head" style="--er:var(--amber)">SESSAO_CAMERA</div><p class="er-cols">ID_SESSAO <b>PK</b> · ID_USUARIO <b>FK</b> · DATA_INICIO · MODO_CAMERA</p></div>
+            <div class="er-rel reveal" data-delay="180">1 : N</div>
+            <div class="reveal er-node" data-delay="200"><div class="er-head" style="--er:var(--green)">ANALISE_CONTEXTO</div><p class="er-cols">ID_ANALISE <b>PK</b> · ID_SESSAO <b>FK</b> · NIVEL_ILUMINACAO · TEMPERATURA_COR · PROFUNDIDADE · SCORE_COMPOSICAO</p></div>
+            <div class="er-rel reveal" data-delay="220">1 : N</div>
+            <div class="reveal er-node" data-delay="240"><div class="er-head" style="--er:#7fd1ff">SUGESTAO</div><p class="er-cols">ID_SUGESTAO <b>PK</b> · ID_ANALISE <b>FK</b> · TIPO · DESCRICAO_USUARIO · AJUSTES_JSON</p></div>
+            <div class="reveal er-node mt-4" data-delay="260" style="border-style:dashed"><div class="er-head" style="--er:var(--purple2)">PREFERENCIA_APRENDIDA</div><p class="er-cols">ID_PREF <b>PK</b> · ID_USUARIO <b>FK</b> · TIPO_AJUSTE · PESO · A IA aprende com o usuário</p></div>
+          </div>
+        </section>
+
+      </div><!-- /story-col -->
+    </div><!-- /showcase -->
+
+    <!-- ============================ FECHAMENTO ============================ -->
+    <section class="cta-wrap">
+      <div class="hero-bg-2"></div>
+      <div class="max-w-3xl mx-auto px-5 text-center relative z-10">
+        <h2 class="reveal text-4xl md:text-6xl font-extrabold leading-tight mb-4">Tecnologia que <span class="text-gradient">desaparece</span>.<br/>Experiência que <span class="wordmark">fica</span>.</h2>
+        <p class="reveal text-muted mb-8" data-delay="120">A LensAI transforma qualquer pessoa em fotógrafo — eliminando a curva de aprendizado do JOVI V70.</p>
+        <div class="reveal flex flex-wrap items-center justify-center gap-3 mb-10" data-delay="180">
+          <span class="glass px-4 py-2 rounded-full text-sm">100% WEB</span>
+          <span class="glass px-4 py-2 rounded-full text-sm">Mobile First</span>
+          <span class="glass px-4 py-2 rounded-full text-sm">HTML · CSS · JS · Tailwind</span>
+        </div>
+        <a href="#prototipo" class="btn-amber reveal inline-block px-8 py-4 rounded-2xl font-semibold" data-delay="240">Abrir o protótipo</a>
+      </div>
+    </section>
+
+    <footer class="border-t border-white/5 py-8 text-center text-sm text-muted">
+      <p class="font-semibold text-white mb-1">LensAI × JOVI V70</p>
+      <p>FIAP · Challenge JOVI · 2026 · Sprint 2</p>
+      <p class="mt-1">Victor Holanda — <span class="text-purple2 font-semibold">RM571263</span></p>
+    </footer>
+
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

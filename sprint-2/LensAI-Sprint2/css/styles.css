@@ -1,0 +1,335 @@
+/* =====================================================================
+   LensAI · Sprint 2 · FIAP Challenge JOVI
+   Estilos customizados (complementam o Tailwind CSS)
+   Autor: Victor Holanda — RM571263
+   ===================================================================== */
+
+/* Inter — fonte variável embutida (offline) */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../vendor/inter-latin.woff2") format("woff2");
+}
+
+:root {
+  --bg:        #08060F;
+  --surface:   #12101E;
+  --surface2:  #1B1830;
+  --purple:    #8B5CF6;
+  --purple2:   #A78BFA;
+  --amber:     #FFB020;
+  --amber2:    #F59E0B;
+  --green:     #34D399;
+  --text:      #F5F3FF;
+  --muted:     #A49EBE;   /* AA em fundo escuro */
+  --line:      rgba(255,255,255,.08);
+  /* aliases legados (compatibilidade) */
+  --purple-2:  var(--purple2);
+  --amber-2:   var(--amber2);
+  --surface-2: var(--surface2);
+}
+
+* { -webkit-tap-highlight-color: transparent; }
+
+/* Cursor + acessibilidade de foco (WCAG 2.4.7) */
+button, a, [role="button"], label, input[type="range"], summary { cursor: pointer; }
+:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+.device :focus-visible { outline-offset: 2px; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+body {
+  margin: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(1200px 700px at 50% -5%, #211a3e 0%, transparent 55%),
+    var(--bg);
+  color: var(--text);
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  overflow-x: hidden;
+}
+
+/* Escala tipográfica (Inter System — precisão) */
+h1, h2, h3 { letter-spacing: -0.02em; }
+.wordmark, .hero-wrap h1 { letter-spacing: -0.035em; }
+.er-cols, .count-up { font-feature-settings: "tnum"; }
+
+/* ---------- Barra de progresso de scroll ---------- */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; height: 3px; width: 0; z-index: 200;
+  background: linear-gradient(90deg, var(--purple), var(--amber));
+  box-shadow: 0 0 12px rgba(255,176,32,.5);
+}
+
+/* ---------- Navbar ---------- */
+.site-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 150; transition: background .3s, backdrop-filter .3s, border-color .3s, transform .3s ease; border-bottom: 1px solid transparent; }
+.site-nav.scrolled { background: rgba(10,8,20,.72); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--line); }
+.site-nav.nav-hidden { transform: translateY(-100%); }
+
+/* ---------- Hero ---------- */
+.hero-wrap { position: relative; min-height: 94vh; display: flex; align-items: center; overflow: hidden; padding: 96px 0 40px; }
+.hero-bg  { position: absolute; inset: 0; background: radial-gradient(650px 460px at 22% 22%, rgba(139,92,246,.28), transparent 62%); animation: float1 14s ease-in-out infinite; }
+.hero-bg-2 { position: absolute; inset: 0; background: radial-gradient(560px 440px at 80% 34%, rgba(255,176,32,.20), transparent 60%); animation: float2 16s ease-in-out infinite; }
+@keyframes float1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(30px,-20px); } }
+@keyframes float2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-24px,24px); } }
+.scroll-hint svg { animation: bob 1.8s ease-in-out infinite; }
+@keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+
+/* Wordmark gigante "JOVI" ao fundo (referência ao site do V70) */
+.hero-ghost {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  font-weight: 800; letter-spacing: -.06em; font-size: min(42vw, 480px);
+  color: transparent; -webkit-text-stroke: 1.5px rgba(139,92,246,.13);
+  z-index: 0; pointer-events: none; user-select: none; white-space: nowrap; will-change: transform;
+}
+
+
+/* ---------- Showcase: telefone sticky + narrativa ---------- */
+.phone-col { display: flex; justify-content: center; padding: 24px 0; }
+.phone-inner { width: 100%; display: flex; flex-direction: column; align-items: center; }
+@media (min-width: 1024px) {
+  .phone-col { position: sticky; top: 0; height: 100vh; align-items: center; }
+}
+.anchor { scroll-margin-top: 84px; }
+.tag-etapa { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--amber); font-weight: 600; letter-spacing: -0.01em; }
+.tag-etapa::before { content: ""; width: 22px; height: 2px; border-radius: 2px; background: var(--amber); opacity: .8; }
+
+/* Interações — CTA e cards (movimento responde à ação, transição suave) */
+.btn-amber { background: linear-gradient(100deg, var(--amber), var(--amber2)); color: #14100a; transition: transform .18s ease, box-shadow .18s ease, filter .18s ease; box-shadow: 0 8px 24px -10px rgba(255,176,32,.6); }
+.btn-amber:hover { transform: translateY(-2px); filter: brightness(1.05); box-shadow: 0 14px 32px -10px rgba(255,176,32,.7); }
+.btn-amber:active { transform: translateY(0); }
+.btn-ghost { transition: background .18s ease, border-color .18s ease, transform .18s ease; }
+.btn-ghost:hover { transform: translateY(-2px); border-color: rgba(255,255,255,.22); }
+.story-col .glass { transition: transform .25s ease, border-color .25s ease; }
+.story-col .glass:hover { border-color: rgba(255,255,255,.16); }
+.nav-link { position: relative; }
+.nav-link::after { content: ""; position: absolute; left: 0; right: 100%; bottom: -4px; height: 2px; background: var(--amber); transition: right .25s ease; }
+.nav-link:hover::after { right: 0; }
+
+/* ---------- Revelação no scroll ---------- */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1); }
+.reveal.in { opacity: 1; transform: none; }
+
+/* ---------- Modelo de dados (ER) ---------- */
+.er-node { border: 1px solid var(--line); border-left: 3px solid var(--er, var(--purple)); border-radius: 14px; padding: 12px 16px; background: rgba(23,20,40,.5); }
+.er-head { font-weight: 800; letter-spacing: .03em; color: var(--er, var(--purple2)); font-size: 14px; }
+.er-cols { font-size: 11px; color: var(--muted); margin-top: 4px; font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; line-height: 1.5; }
+.er-cols b { color: #fff; }
+.er-rel { text-align: center; font-size: 11px; color: var(--muted); letter-spacing: .1em; }
+
+/* ---------- Fechamento ---------- */
+.cta-wrap { position: relative; overflow: hidden; padding: 120px 0; }
+
+/* ---------- Moldura do dispositivo ---------- */
+.device {
+  position: relative;
+  width: min(400px, 92vw);
+  height: min(820px, 86vh);
+  background: #050409;
+  border-radius: 46px;
+  overflow: hidden;
+  /* moldura metálica inspirada no JOVI V70 (Azul Safira) */
+  box-shadow:
+    0 0 0 2px #05060c,
+    0 0 0 9px #0a0a14,
+    0 0 0 11px #2b3f6b,
+    0 0 0 12px #5f7fc0,
+    0 40px 90px -20px rgba(0,0,0,.85),
+    0 0 140px -30px rgba(90,120,200,.4);
+}
+@media (max-width: 480px) {
+  .device { width: min(360px, 94vw); height: min(700px, 78vh); border-radius: 40px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .hero-bg, .hero-bg-2, .scroll-hint svg { animation: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* Modo captura (screenshots para a apresentação) — ativado só por ?kiosk=1 */
+body.kiosk .site-nav, body.kiosk .hero-wrap, body.kiosk .story-col,
+body.kiosk .cta-wrap, body.kiosk footer, body.kiosk #scrollProgress { display: none !important; }
+body.kiosk #prototipo { display: flex !important; justify-content: center; align-items: center; min-height: 100vh; padding: 18px 0; }
+body.kiosk .phone-col { position: static !important; height: auto !important; padding: 0; }
+/* Punch-hole da câmera frontal (bordas ultrafinas, estilo V70) */
+.device::before {
+  content: "";
+  position: absolute;
+  top: 15px; left: 50%; transform: translateX(-50%);
+  width: 12px; height: 12px;
+  background: #000;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px #10131f, 0 0 0 1.5px rgba(120,150,220,.25);
+  z-index: 60;
+}
+
+/* ---------- Telas ---------- */
+.screen {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  animation: fade .35s ease both;
+}
+.screen.active { display: flex; }
+@keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* Área rolável interna sem barra visível */
+.scroll { overflow-y: auto; overflow-x: hidden; }
+.scroll::-webkit-scrollbar { width: 0; height: 0; }
+.scroll { scrollbar-width: none; }
+
+/* ---------- Marca / wordmark ---------- */
+.wordmark {
+  font-weight: 800;
+  letter-spacing: -.03em;
+  background: linear-gradient(100deg, #fff 0%, var(--purple-2) 55%, var(--amber) 120%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+.text-gradient {
+  background: linear-gradient(100deg, var(--purple-2), var(--amber));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+
+/* ---------- Vidro ---------- */
+.glass {
+  background: rgba(23,20,40,.62);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  border: 1px solid var(--line);
+}
+
+/* ---------- Cenas da câmera — fotos reais (embutidas, offline) ---------- */
+.scene {
+  position: absolute; inset: 0; transition: filter .5s ease, transform .6s cubic-bezier(.2,.8,.2,1);
+  background-size: cover; background-position: center; background-repeat: no-repeat;
+  background-color: #0d0a16; transform-origin: center;
+}
+.scene::after { /* granulado sutil + leve vinheta para dar realismo */
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(120% 120% at 50% 40%, transparent 60%, rgba(0,0,0,.28) 100%),
+    radial-gradient(rgba(255,255,255,.6) .5px, transparent .5px);
+  background-size: 100% 100%, 3px 3px;
+  opacity: .5;
+}
+.scene--palm      { background-image: url("../assets/scenes/palm-sunset.jpg"); }
+.scene--sunset    { background-image: url("../assets/scenes/sunset-bay.webp"); }
+.scene--turquoise { background-image: url("../assets/scenes/turquoise-beach.jpg"); }
+.scene--golden    { background-image: url("../assets/scenes/golden-ocean.jpg"); }
+.scene--violet    { background-image: url("../assets/scenes/purple-dusk.jpg"); }
+.scene--night     { background-image: url("../assets/scenes/dusk.jpg"); }
+
+/* Brackets do enquadramento + linha de varredura da IA */
+.viewfinder-grid {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px);
+  background-size: 33.33% 33.33%;
+  opacity: 0; transition: opacity .3s;
+}
+.viewfinder-grid.on { opacity: 1; }
+
+.scanline {
+  position: absolute; left: 0; right: 0; height: 120px; pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(139,92,246,.28), rgba(255,176,32,.15), transparent);
+  filter: blur(2px);
+  animation: scan 2.6s cubic-bezier(.4,0,.2,1) infinite;
+  opacity: 0; transition: opacity .3s;
+}
+.scanline.on { opacity: 1; }
+@keyframes scan { 0% { top: -20%; } 100% { top: 100%; } }
+
+.focus-ring {
+  position: absolute; width: 96px; height: 96px; border: 2px solid var(--amber);
+  border-radius: 12px; transform: translate(-50%,-50%) scale(1.4); opacity: 0;
+  box-shadow: 0 0 0 100vmax rgba(0,0,0,.001);
+}
+.focus-ring.show { animation: focus .7s ease; }
+@keyframes focus {
+  0% { opacity: 0; transform: translate(-50%,-50%) scale(1.6); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%,-50%) scale(1); }
+}
+
+/* ---------- Medidores da análise ---------- */
+.meter { height: 6px; border-radius: 999px; background: rgba(255,255,255,.14); overflow: hidden; }
+.meter > span {
+  display: block; height: 100%; width: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--purple), var(--amber));
+  transition: width 1s cubic-bezier(.2,.8,.2,1);
+}
+
+/* ---------- Botão de captura ---------- */
+.shutter {
+  width: 74px; height: 74px; border-radius: 999px;
+  background: #fff; position: relative;
+  border: 4px solid rgba(255,255,255,.35);
+  box-shadow: 0 0 0 3px rgba(255,255,255,.9) inset, 0 8px 30px rgba(0,0,0,.5);
+  transition: transform .12s;
+}
+.shutter:active { transform: scale(.92); }
+.shutter.recording { background: var(--amber); }
+
+/* Flash do obturador */
+.flash {
+  position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 80;
+}
+.flash.fire { animation: flash .5s ease; }
+@keyframes flash { 0% { opacity: 0; } 8% { opacity: .95; } 100% { opacity: 0; } }
+
+/* ---------- Bottom sheet ---------- */
+.sheet-backdrop {
+  position: absolute; inset: 0; background: rgba(4,3,10,.55); z-index: 90;
+  opacity: 0; pointer-events: none; transition: opacity .3s;
+}
+.sheet-backdrop.open { opacity: 1; pointer-events: auto; }
+.sheet {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 95;
+  transform: translateY(105%); transition: transform .38s cubic-bezier(.2,.9,.2,1);
+  border-radius: 26px 26px 0 0;
+}
+.sheet.open { transform: translateY(0); }
+
+/* ---------- Toggle ---------- */
+.switch { width: 44px; height: 26px; border-radius: 999px; background: rgba(255,255,255,.16); position: relative; transition: background .25s; flex: none; }
+.switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 999px; background: #fff; transition: transform .25s; }
+.switch.on { background: linear-gradient(90deg, var(--purple), var(--amber)); }
+.switch.on::after { transform: translateX(18px); }
+
+/* ---------- Chips / tabs ---------- */
+.chip { transition: all .2s; }
+.chip.active { background: #fff; color: #14101f; font-weight: 600; }
+
+/* ---------- Toast ---------- */
+.toast {
+  position: absolute; left: 50%; bottom: 108px; transform: translate(-50%, 20px);
+  z-index: 120; opacity: 0; transition: all .3s; pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------- Range (editor) ---------- */
+input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 999px; background: rgba(255,255,255,.16); }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 999px; background: #fff; box-shadow: 0 0 0 4px rgba(139,92,246,.4); cursor: pointer; }
+input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; border: none; border-radius: 999px; background: #fff; box-shadow: 0 0 0 4px rgba(139,92,246,.4); cursor: pointer; }
+
+/* ---------- Utilidades ---------- */
+.pulse { animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .45; } }
+.count-up { font-variant-numeric: tabular-nums; }
+.skeleton { background: linear-gradient(90deg, rgba(255,255,255,.05), rgba(255,255,255,.12), rgba(255,255,255,.05)); background-size: 200% 100%; animation: shimmer 1.2s infinite; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+.rise { animation: rise .45s ease both; }
+@keyframes rise { from { opacity: 0; transform: translateY(10px);} to { opacity:1; transform:none; } }
