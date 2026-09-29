@@ -9,6 +9,8 @@
 ![Mobile First](https://img.shields.io/badge/mobile--first-8B5CF6)
 ![Offline](https://img.shields.io/badge/100%25_offline-FFB020)
 
+### ▶️ [Abrir o protótipo online](https://zhobbit.github.io/challenge-jovi-lensai/sprint-2/LensAI-Sprint2/)
+
 ![Landing do protótipo](docs/sprint-2/screenshots/landing.png)
 
 ---
@@ -48,7 +50,9 @@ A **LensAI** analisa em tempo real a **iluminação**, a **composição** e a **
 
 ## Como rodar o protótipo
 
-O protótipo não precisa de build, dependências nem internet. O Tailwind e a fonte Inter já vêm dentro da pasta `vendor/`.
+**Online:** o protótipo está publicado em https://zhobbit.github.io/challenge-jovi-lensai/sprint-2/LensAI-Sprint2/ (GitHub Pages).
+
+**Localmente:** não precisa de build, dependências nem internet. O Tailwind e a fonte Inter já vêm dentro da pasta `vendor/`.
 
 **Opção 1:** dar duplo clique em [`sprint-2/LensAI-Sprint2/index.html`](sprint-2/LensAI-Sprint2/index.html).
 
